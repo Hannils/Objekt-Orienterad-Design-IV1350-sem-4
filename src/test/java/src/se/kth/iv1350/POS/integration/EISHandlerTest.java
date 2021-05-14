@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import src.se.kth.iv1350.POS.DTO.ItemDTO;
 import src.se.kth.iv1350.POS.controller.Controller;
+import src.se.kth.iv1350.POS.model.Item;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,11 +46,24 @@ class EISHandlerTest {
     }
     @Test
     public void testIfFindItemWorksCorrectly() {
-        firstTestItemDTO = instanceToTest.findItem(firstIdentifier);
-        secondTestItemDTO = instanceToTest.findItem(secondIdentifier);
-        thirdTestItemDTO = instanceToTest.findItem(thirdIdentifier);
-        assertEquals("Uncle Ben's 1 minute rice", firstTestItemDTO.getName(), messageForFindItemTest);
-        assertEquals("Coca Cola", secondTestItemDTO.getName(), messageForFindItemTest);
-        assertEquals("Knox Stark", thirdTestItemDTO.getName(), messageForFindItemTest);
+        try {
+            firstTestItemDTO = instanceToTest.findItem(firstIdentifier);
+            secondTestItemDTO = instanceToTest.findItem(secondIdentifier);
+            thirdTestItemDTO = instanceToTest.findItem(thirdIdentifier);
+            assertEquals("Uncle Ben's 1 minute rice", firstTestItemDTO.getName(), messageForFindItemTest);
+            assertEquals("Coca Cola", secondTestItemDTO.getName(), messageForFindItemTest);
+            assertEquals("Knox Stark", thirdTestItemDTO.getName(), messageForFindItemTest);
+        } catch(ItemNotFoundException e) {
+            fail("Invalid identifier entered, no item found");
+        }
+    }
+    @Test
+    public void testIfItemNotFoundExceptionWorksCorrectly() {
+        try {
+            instanceToTest.findItem("Invalid identifier");
+            fail("ItemNotFoundException was not catched with invalid identifier");
+        } catch(ItemNotFoundException e) {
+            assertTrue(e.getMessage().contains("no item found"), "The exception message was wrong.");
+        }
     }
 }

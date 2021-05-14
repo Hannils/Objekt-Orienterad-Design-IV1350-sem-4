@@ -5,7 +5,9 @@ import src.se.kth.iv1350.POS.DTO.PaymentDTO;
 import src.se.kth.iv1350.POS.DTO.SaleInfoDTO;
 import src.se.kth.iv1350.POS.integration.EASHandler;
 import src.se.kth.iv1350.POS.integration.EISHandler;
+import src.se.kth.iv1350.POS.integration.ItemNotFoundException;
 import src.se.kth.iv1350.POS.integration.Printer;
+import src.se.kth.iv1350.POS.model.Item;
 import src.se.kth.iv1350.POS.model.Receipt;
 import src.se.kth.iv1350.POS.model.Sale;
 
@@ -45,11 +47,17 @@ public class Controller {
    * @param identifier This is the parameter which identifies the item entered.
    * @return
    */
-  public SaleInfoDTO enterItem(String identifier) {
-    ItemDTO itemDTO = eis.findItem(identifier);
-    SaleInfoDTO saleInformation = sale.addItem(itemDTO);
-    System.out.println("Item " + identifier + " has been added");
-    return saleInformation;
+  public SaleInfoDTO enterItem(String identifier) throws ItemNotFoundException {
+    try {
+      ItemDTO itemDTO = eis.findItem(identifier);
+      SaleInfoDTO saleInformation = sale.addItem(itemDTO);
+      System.out.println("Item " + identifier + " has been added");
+      return saleInformation;
+    } catch(ItemNotFoundException itemNotFound) {
+      System.out.println("For developers: " + itemNotFound);
+      throw itemNotFound;
+    }
+
   }
 
   /**

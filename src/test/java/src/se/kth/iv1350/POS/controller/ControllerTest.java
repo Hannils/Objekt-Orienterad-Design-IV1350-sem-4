@@ -7,6 +7,7 @@ import src.se.kth.iv1350.POS.DTO.PaymentDTO;
 import src.se.kth.iv1350.POS.DTO.SaleInfoDTO;
 import src.se.kth.iv1350.POS.integration.EASHandler;
 import src.se.kth.iv1350.POS.integration.EISHandler;
+import src.se.kth.iv1350.POS.integration.ItemNotFoundException;
 import src.se.kth.iv1350.POS.integration.Printer;
 import src.se.kth.iv1350.POS.model.Sale;
 import java.io.ByteArrayOutputStream;
@@ -56,9 +57,14 @@ class ControllerTest {
   }
   @Test
   public void testEnterItemHasEnteredItem(){
-      instanceToTest.enterItem("first");
-      String printOut = eis.findItem("first").getName();
-      assertTrue(printOut.contains("Uncle Ben's 1 minute rice"), "Item did not enter correctly.");
+      try {
+          instanceToTest.enterItem("first");
+          String printOut = eis.findItem("first").getName();
+          assertTrue(printOut.contains("Uncle Ben's 1 minute rice"), "Item did not enter correctly.");
+      } catch (ItemNotFoundException e) {
+          fail("Invalid identifier entered, no item found");
+      }
+
   }
   @Test
   public void testIfPaymentHasGoneThrough() {
@@ -68,7 +74,12 @@ class ControllerTest {
   }
   @Test
   public void testIfChangeIsCalculatedCorrectly() {
-     SaleInfoDTO saleInformation = instanceToTest.enterItem("first");
-     assertEquals(81.25, 100 - saleInformation.getRunningTotal(), "Change was not calculated correctly.");
+      try {
+          SaleInfoDTO saleInformation = instanceToTest.enterItem("first");
+          assertEquals(81.25, 100 - saleInformation.getRunningTotal(), "Change was not calculated correctly.");
+      } catch(ItemNotFoundException e) {
+          fail("Invalid identifier entered, no item found.");
+      }
+
   }
 }

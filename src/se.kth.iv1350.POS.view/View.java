@@ -3,6 +3,7 @@ package src.se.kth.iv1350.POS.view;
 import src.se.kth.iv1350.POS.DTO.PaymentDTO;
 import src.se.kth.iv1350.POS.DTO.SaleInfoDTO;
 import src.se.kth.iv1350.POS.controller.Controller;
+import src.se.kth.iv1350.POS.integration.ItemNotFoundException;
 
 /**
  * This is a placeholder for the real view. It contains a hardcoded execution
@@ -16,7 +17,6 @@ public class View {
 
   /**
    * Creates a new instance, that uses the specified controller for all calls to other layers.
-   *
    * @param contr The controller to use for all calls other layers.
    */
   public View(Controller contr) {
@@ -29,11 +29,15 @@ public class View {
   public void runFakeExecution() {
 	contr.startSale();
 	System.out.println("A new sale has been started.");
-	SaleInfoDTO saleInformation = contr.enterItem("first");
-      saleInformation = contr.enterItem("third");
-      saleInformation = contr.enterItem("first");
-	PaymentDTO payment = contr.pay(amount, currency);
-	System.out.println("Change: " + payment);
+	try {
+        SaleInfoDTO saleInformation = contr.enterItem("first");
+        saleInformation = contr.enterItem("third");
+        saleInformation = contr.enterItem("first");
+        PaymentDTO payment = contr.pay(amount, currency);
+        System.out.println("Change: " + payment);
+    } catch(ItemNotFoundException itemNotFound) {
+	    System.err.println("Invalid identifier entered, no item found. " + itemNotFound);
+    }
 
   }
 

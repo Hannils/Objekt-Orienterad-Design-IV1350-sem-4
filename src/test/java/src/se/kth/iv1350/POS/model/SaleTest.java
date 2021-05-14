@@ -24,8 +24,8 @@ class SaleTest {
 	originalSysOut = System.out;
 	System.setOut(inMemSysOut);
 	instanceToTest = new Sale();
-	firstItemDTO = new ItemDTO("Ris", 0.25, 15, "Basmati");
-	secondItemDTO = new ItemDTO("Dryck", 0.15, 9.90, "Dryck");
+	firstItemDTO = new ItemDTO("Ris", 0.25, 15, "Basmati", "first");
+	secondItemDTO = new ItemDTO("Dryck", 0.15, 9.90, "Dryck", "second");
 	itemDTOArrayForTesting = new ItemDTO[2];
 	itemDTOArrayForTesting[0] = firstItemDTO;
 	itemDTOArrayForTesting[1] = secondItemDTO;

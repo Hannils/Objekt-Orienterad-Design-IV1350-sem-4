@@ -20,7 +20,7 @@ class ItemTest {
         PrintStream inMemSysOut = new PrintStream(printoutBuffer);
         originalSysOut = System.out;
         System.setOut(inMemSysOut);
-        itemDTO = new ItemDTO("Ris", 0.25, 15, "Basmati");
+        itemDTO = new ItemDTO("Ris", 0.25, 15, "Basmati", "first");
         item = new Item(itemDTO, 1);
     }
     @AfterEach
