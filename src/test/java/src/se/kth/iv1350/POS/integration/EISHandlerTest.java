@@ -53,17 +53,30 @@ class EISHandlerTest {
             assertEquals("Uncle Ben's 1 minute rice", firstTestItemDTO.getName(), messageForFindItemTest);
             assertEquals("Coca Cola", secondTestItemDTO.getName(), messageForFindItemTest);
             assertEquals("Knox Stark", thirdTestItemDTO.getName(), messageForFindItemTest);
-        } catch(ItemNotFoundException e) {
-            fail("Invalid identifier entered, no item found");
+        } catch(Exception exec) {
+            fail("An exception was thrown: " + exec.getMessage());
         }
     }
     @Test
-    public void testIfItemNotFoundExceptionWorksCorrectly() {
+    public void testIfFindItemWithInvalidIdentifierThrowsItemNotFoundException() {
         try {
             instanceToTest.findItem("Invalid identifier");
             fail("ItemNotFoundException was not catched with invalid identifier");
-        } catch(ItemNotFoundException e) {
-            assertTrue(e.getMessage().contains("no item found"), "The exception message was wrong.");
+        } catch(ItemNotFoundException exce) {
+            assertTrue(exce.getMessage().contains("no item found"), "The exception message was wrong.");
+        } catch (Exception exec) {
+            fail("Wrong exception was thrown: " + exec.getMessage());
         }
+    }
+    @Test
+    public void testIfServerDownExceptionWithHardcodedIdentifierThrowsServerDownException() {
+        try {
+            instanceToTest.findItem("serverDownIdentifier");
+        } catch (ServerDownException exce) {
+            assertTrue(exce.getMessage().contains("Server is down"), "The exception message was wrong");
+        } catch(Exception exce){
+            fail("Wrong exception was thrown: " + exce.getMessage());
+        }
+
     }
 }

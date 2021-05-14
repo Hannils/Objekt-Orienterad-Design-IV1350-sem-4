@@ -61,8 +61,8 @@ class ControllerTest {
           instanceToTest.enterItem("first");
           String printOut = eis.findItem("first").getName();
           assertTrue(printOut.contains("Uncle Ben's 1 minute rice"), "Item did not enter correctly.");
-      } catch (ItemNotFoundException e) {
-          fail("Invalid identifier entered, no item found");
+      } catch (Exception exec) {
+          fail("An exception was thrown: " + exec.getMessage());
       }
 
   }
@@ -77,8 +77,8 @@ class ControllerTest {
       try {
           SaleInfoDTO saleInformation = instanceToTest.enterItem("first");
           assertEquals(81.25, 100 - saleInformation.getRunningTotal(), "Change was not calculated correctly.");
-      } catch(ItemNotFoundException e) {
-          fail("Invalid identifier entered, no item found.");
+      } catch(Exception exec) {
+          fail("An exception was thrown: " + exec.getMessage());
       }
 
   }

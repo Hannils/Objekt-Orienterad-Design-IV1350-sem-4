@@ -15,6 +15,10 @@ public class EISHandler {
  private ItemDTO secondItemDTO;
  private ItemDTO thirdItemDTO;
 
+    /**
+     * This is the constructor for the EISHandler. It creates three pre-determined items and adds it
+     * to the inventory array-list.
+     */
  public EISHandler() {
      firstItemDTO = new ItemDTO("Ris", 0.25, 15, "Uncle Ben's 1 minute rice", "first");
      secondItemDTO = new ItemDTO("Dryck", 0.25, 10, "Coca Cola", "second");
@@ -26,17 +30,22 @@ public class EISHandler {
 
   /**
    * This is the function which searches for an item with the parameter sent in.
-   *
+   * @throws ItemNotFoundException if the entered identifier is not found in inventory.
+   * @throws ServerDownException if the database is down or unreachable.
    * @param identifier This is the parameter which identifies the item entered.
    * @return
    */
-  public ItemDTO findItem(String identifier) throws ItemNotFoundException {
+  public ItemDTO findItem(String identifier) throws ItemNotFoundException, ServerDownException {
+      if(identifier.equals("serverDownIdentifier")) {
+          throw new ServerDownException("Server is down. No access to Exernal Inventory System");
+      }
       for (ItemDTO itemDTO : inventory){
           if(itemDTO.getIdentifier().equals(identifier)){
               return itemDTO;
           }
       }
-      throw new ItemNotFoundException("Invalid identifier was entered, no item found.");
+      throw new ItemNotFoundException("Invalid identifier was entered, no item found. " +
+              "Identifier: " + identifier);
   }
 
   /**

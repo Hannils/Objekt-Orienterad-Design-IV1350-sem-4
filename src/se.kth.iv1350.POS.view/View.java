@@ -4,6 +4,7 @@ import src.se.kth.iv1350.POS.DTO.PaymentDTO;
 import src.se.kth.iv1350.POS.DTO.SaleInfoDTO;
 import src.se.kth.iv1350.POS.controller.Controller;
 import src.se.kth.iv1350.POS.integration.ItemNotFoundException;
+import src.se.kth.iv1350.POS.integration.ServerDownException;
 
 /**
  * This is a placeholder for the real view. It contains a hardcoded execution
@@ -12,8 +13,9 @@ import src.se.kth.iv1350.POS.integration.ItemNotFoundException;
 public class View {
   private Controller contr;
   private String identifier;
-  private int amount;
-  private String currency;
+  private int amount = 100;
+  private String currency = "kr";
+  private SaleInfoDTO saleInformation;
 
   /**
    * Creates a new instance, that uses the specified controller for all calls to other layers.
@@ -21,6 +23,8 @@ public class View {
    */
   public View(Controller contr) {
 	this.contr = contr;
+	contr.addSaleObserver(new TotalRevenueFileOutput());
+      contr.addSaleObserver(new TotalRevenueView());
   }
 
   /**
@@ -30,15 +34,18 @@ public class View {
 	contr.startSale();
 	System.out.println("A new sale has been started.");
 	try {
-        SaleInfoDTO saleInformation = contr.enterItem("first");
-        saleInformation = contr.enterItem("third");
+        contr.enterItem("first");
+        contr.enterItem("third");
         saleInformation = contr.enterItem("first");
-        PaymentDTO payment = contr.pay(amount, currency);
-        System.out.println("Change: " + payment);
     } catch(ItemNotFoundException itemNotFound) {
-	    System.err.println("Invalid identifier entered, no item found. " + itemNotFound);
+	    System.err.println("Invalid identifier, item not found.");
+    } catch (ServerDownException serverDown) {
+	    System.err.println("Server not reachable");
     }
-
+      PaymentDTO payment = contr.pay(amount, currency);
+	  double changeNotRounded = payment.getAmount() - saleInformation.getRunningTotal();
+      double changeRounded = Math.round(changeNotRounded * 100.0) / 100.0;
+      System.out.println("Change: " + changeRounded + payment.getCurrency());
   }
 
 }

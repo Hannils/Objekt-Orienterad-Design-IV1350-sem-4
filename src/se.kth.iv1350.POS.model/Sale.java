@@ -7,6 +7,7 @@ import src.se.kth.iv1350.POS.DTO.SaleInfoDTO;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * One single sale made by one single customer and payed with one payment.
@@ -19,6 +20,7 @@ public class Sale {
   private double totalPrice;
   private double totalVAT;
   private double runningTotal = totalPrice + totalVAT;
+  private List <SaleObserver> saleObservers = new ArrayList<>();
 
   /**
    * Creates a new instance and saves the time for the sale.
@@ -63,7 +65,6 @@ public class Sale {
     this.runningTotal = this.totalPrice + this.totalVAT;
   }
 
-
   /**
    * This is the function which completes the sale and accepts payment. It takes in several parameters.
    * @param payment This is the parameter which takes in the payment recieved.
@@ -72,7 +73,22 @@ public class Sale {
    */
   public Receipt complete(PaymentDTO payment, Sale sale) {
     Receipt receipt = new Receipt(sale, payment);
+    notifyObservers();
     return receipt;
+  }
+
+  private void notifyObservers() {
+    for(SaleObserver obs : saleObservers) {
+      obs.newSale(totalPrice);
+    }
+  }
+
+  /**
+   * Adds an observer. The observer will be notified when a sale is completed.
+   * @param obs The observer to notify.
+   */
+  public void addSaleObserver(SaleObserver obs) {
+    saleObservers.add(obs);
   }
 
   /**
