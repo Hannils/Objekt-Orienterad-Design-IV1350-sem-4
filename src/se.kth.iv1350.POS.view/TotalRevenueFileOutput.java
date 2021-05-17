@@ -27,8 +27,8 @@ import java.time.format.FormatStyle;
     }
 
     /**
-     *
-     * @param priceOfPurchase
+     * This is the function which updates totalRevenue and prints to file.
+     * @param priceOfPurchase This is the parameter that has information of the price of the purchase.
      */
     public void newSale(double priceOfPurchase) {
         totalRevenue += priceOfPurchase;

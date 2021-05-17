@@ -2,6 +2,7 @@ package src.se.kth.iv1350.POS.view;
 
 import org.junit.jupiter.api.*;
 import src.se.kth.iv1350.POS.controller.Controller;
+import src.se.kth.iv1350.POS.integration.DCHandler;
 import src.se.kth.iv1350.POS.integration.EASHandler;
 import src.se.kth.iv1350.POS.integration.EISHandler;
 import src.se.kth.iv1350.POS.integration.Printer;
@@ -14,6 +15,7 @@ class ViewTest {
   private EASHandler eas;
   private EISHandler eis;
   private Printer printer;
+  private DCHandler dc;
   private ByteArrayOutputStream printoutBuffer;
   private PrintStream originalSysOut;
 
@@ -26,7 +28,8 @@ class ViewTest {
 	eis = new EISHandler();
 	eas = new EASHandler();
 	printer = new Printer();
-	Controller contr = new Controller(eis, eas, printer);
+	dc = new DCHandler();
+	Controller contr = new Controller(eis, eas, printer, dc);
 	instanceToTest = new View(contr);
   }
   @AfterEach

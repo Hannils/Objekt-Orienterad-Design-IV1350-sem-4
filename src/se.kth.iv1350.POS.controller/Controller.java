@@ -1,13 +1,14 @@
 package src.se.kth.iv1350.POS.controller;
 
+import src.se.kth.iv1350.POS.DTO.DiscountDTO;
 import src.se.kth.iv1350.POS.DTO.ItemDTO;
 import src.se.kth.iv1350.POS.DTO.PaymentDTO;
 import src.se.kth.iv1350.POS.DTO.SaleInfoDTO;
+import src.se.kth.iv1350.POS.discount.DiscountFinder;
+import src.se.kth.iv1350.POS.discount.ItemDiscount;
+import src.se.kth.iv1350.POS.discount.SaleDiscount;
 import src.se.kth.iv1350.POS.integration.*;
-import src.se.kth.iv1350.POS.model.Item;
-import src.se.kth.iv1350.POS.model.Receipt;
-import src.se.kth.iv1350.POS.model.Sale;
-import src.se.kth.iv1350.POS.model.SaleObserver;
+import src.se.kth.iv1350.POS.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,9 @@ public class Controller {
   private EISHandler eis;
   private EASHandler eas;
   private Printer printer;
+  private DCHandler dc;
   private Sale sale;
+  private Register register;
   private List<SaleObserver> saleObservers = new ArrayList<>();
 
   /**
@@ -28,10 +31,12 @@ public class Controller {
    * @param eis This is the external inventory system parameter.
    * @param printer This is the printer parameter.
    */
-  public Controller(EISHandler eis, EASHandler eas, Printer printer){
+  public Controller(EISHandler eis, EASHandler eas, Printer printer, DCHandler dc){
     this.eis = eis;
 	this.eas = eas;
     this.printer = printer;
+    this.dc = dc;
+    this.register = Register.getInstance();
 
     //For testing purposes
     System.out.println("Controller started successfully");
@@ -74,13 +79,28 @@ public class Controller {
   public PaymentDTO pay(int amount, String currency) {
     PaymentDTO payment = new PaymentDTO(amount, currency);
     Receipt receipt = sale.complete(payment, sale);
+    PaymentDTO change = new PaymentDTO(amount - (int) (sale.getRunningTotal()), currency);
     eas.registerPayment(payment, sale);
     eis.updateInventory(sale);
     printer.printReceipt(receipt, sale);
-    return payment;
+    return change;
   }
 
+  /**
+   * This is the function which adds observers to the saleObservers arrayList
+   * @param saleObserver
+   */
   public void addSaleObserver(SaleObserver saleObserver) {
     saleObservers.add(saleObserver);
+  }
+
+  /**
+   * This is the function which applies all the discounts found for the sale.
+   */
+  public void applyDiscount() {
+    List <DiscountDTO> itemDiscounts = dc.findDiscount(sale, new ItemDiscount());
+    List <DiscountDTO> saleDiscounts = dc.findDiscount(sale, new SaleDiscount());
+    sale.applyItemDiscount(itemDiscounts);
+    sale.applyDiscount(saleDiscounts);
   }
 }

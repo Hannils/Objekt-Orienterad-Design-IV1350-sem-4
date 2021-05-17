@@ -1,5 +1,6 @@
 package src.se.kth.iv1350.POS.model;
 
+import src.se.kth.iv1350.POS.DTO.DiscountDTO;
 import src.se.kth.iv1350.POS.DTO.ItemDTO;
 import src.se.kth.iv1350.POS.DTO.PaymentDTO;
 import src.se.kth.iv1350.POS.DTO.SaleInfoDTO;
@@ -91,6 +92,33 @@ public class Sale {
     saleObservers.add(obs);
   }
 
+  /**
+   * This is the function which applies discount to the entire sale.
+   * @param discounts This is the parameter that has information about the available disocunts.
+   */
+  public void applyDiscount(List<DiscountDTO> discounts) {
+    for(DiscountDTO discount : discounts) {
+      if(discount.getAmount() < 1)
+        this.runningTotal *= discount.getAmount();
+      else
+        this.runningTotal -= discount.getAmount();
+    }
+
+  }
+
+  /**
+   * This is the function which applies discounts to items.
+   * @param discounts This is the parameter which has information about available discounts.
+   */
+  public void applyItemDiscount(List<DiscountDTO> discounts) {
+    for(DiscountDTO discount : discounts){
+      for(Item item : items) {
+        if(item.getIdentifier().equals(discount.getIdForDiscountedItem()))
+          item.applyDiscount(discount);
+      }
+    }
+    updatePrices();
+  }
   /**
    * This is the function which return the time of the sale.
    * @return

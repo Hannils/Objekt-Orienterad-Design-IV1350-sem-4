@@ -5,10 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import src.se.kth.iv1350.POS.DTO.PaymentDTO;
 import src.se.kth.iv1350.POS.DTO.SaleInfoDTO;
-import src.se.kth.iv1350.POS.integration.EASHandler;
-import src.se.kth.iv1350.POS.integration.EISHandler;
-import src.se.kth.iv1350.POS.integration.ItemNotFoundException;
-import src.se.kth.iv1350.POS.integration.Printer;
+import src.se.kth.iv1350.POS.integration.*;
 import src.se.kth.iv1350.POS.model.Sale;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -19,6 +16,7 @@ class ControllerTest {
   private EASHandler eas;
   private EISHandler eis;
   private Printer printer;
+  private DCHandler dc;
   private String currency;
   private int amount;
   private ByteArrayOutputStream printoutBuffer;
@@ -33,7 +31,8 @@ class ControllerTest {
 	eas = new EASHandler();
 	eis = new EISHandler();
 	printer = new Printer();
-	instanceToTest = new Controller(eis, eas, printer);
+	dc = new DCHandler();
+	instanceToTest = new Controller(eis, eas, printer, dc);
 	instanceToTest.startSale();
   }
   @AfterEach

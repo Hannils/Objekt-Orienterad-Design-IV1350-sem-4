@@ -42,10 +42,10 @@ public class View {
     } catch (ServerDownException serverDown) {
 	    System.err.println("Server not reachable");
     }
-      PaymentDTO payment = contr.pay(amount, currency);
-	  double changeNotRounded = payment.getAmount() - saleInformation.getRunningTotal();
-      double changeRounded = Math.round(changeNotRounded * 100.0) / 100.0;
-      System.out.println("Change: " + changeRounded + payment.getCurrency());
+	  contr.applyDiscount();
+      PaymentDTO change = contr.pay(amount, currency);
+      System.out.println("Change: " + change);
+
   }
 
 }

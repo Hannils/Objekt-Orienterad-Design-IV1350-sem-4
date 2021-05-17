@@ -13,6 +13,10 @@ class TotalRevenueView implements SaleObserver {
         totalRevenue = 0;
     }
 
+    /**
+     * This is the function which updates totalRevenue and prints it to the console.
+     * @param priceOfPurchase
+     */
     @Override
     public void newSale(double priceOfPurchase) {
     totalRevenue += priceOfPurchase;

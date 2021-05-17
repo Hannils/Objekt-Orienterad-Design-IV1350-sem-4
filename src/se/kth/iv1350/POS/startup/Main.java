@@ -1,6 +1,7 @@
 package src.se.kth.iv1350.POS.startup;
 
 import src.se.kth.iv1350.POS.controller.Controller;
+import src.se.kth.iv1350.POS.integration.DCHandler;
 import src.se.kth.iv1350.POS.integration.EASHandler;
 import src.se.kth.iv1350.POS.integration.EISHandler;
 import src.se.kth.iv1350.POS.integration.Printer;
@@ -20,9 +21,10 @@ public class Main {
 	EISHandler eis = new EISHandler();
 	EASHandler eas = new EASHandler();
 	Printer printer = new Printer();
+	DCHandler dc = new DCHandler();
 
 	//The controller class and view class being created.
-	Controller contr = new Controller(eis, eas, printer);
+	Controller contr = new Controller(eis, eas, printer, dc);
 	View view = new View(contr);
 
 	view.runFakeExecution();

@@ -1,5 +1,6 @@
 package src.se.kth.iv1350.POS.model;
 
+import src.se.kth.iv1350.POS.DTO.DiscountDTO;
 import src.se.kth.iv1350.POS.DTO.ItemDTO;
 
 /**
@@ -12,6 +13,7 @@ public class Item {
   private String description;
   private int weight;
   private int quantity;
+  private String identifier;
 
   /**
    * This is the constructor for the item class. It takes in several parameters.
@@ -25,6 +27,7 @@ public class Item {
     this.quantity = quantity;
     this.price = itemDTO.getPrice() * this.quantity;
     this.weight = weight;
+    this.identifier = itemDTO.getIdentifier();
   }
 
   /**
@@ -73,6 +76,21 @@ public class Item {
    */
   public int getQuantity() {
     return this.quantity;
+  }
+
+  public String getIdentifier() {
+    return this.identifier;
+  }
+
+  /**
+   * This is the function which adds a discount to a specific item.
+   * @param discount The discount to be applied to the item.
+   */
+  public void applyDiscount(DiscountDTO discount) {
+    if(discount.getAmount() < 1)
+      price *= discount.getAmount();
+    else
+      price -= discount.getAmount();
   }
 
   /**

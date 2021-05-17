@@ -33,6 +33,10 @@ public class PaymentDTO {
     return this.currency;
   }
 
+  /**
+   * This is the function that specifies how a paymentDTO is supposed to be written out.
+   * @return The way a paymentDTO is supposed to be written out.
+   */
   @Override
   public String toString() {
     return this.amount + " " + this.currency;
