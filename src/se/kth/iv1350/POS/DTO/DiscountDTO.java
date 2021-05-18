@@ -4,7 +4,7 @@ package src.se.kth.iv1350.POS.DTO;
  * This is class in which the discount DTO is defined.
  */
 public class DiscountDTO {
-    private final String type;
+    private String type;
     private String idForDiscountedItem;
     private double amount;
     private double minRequiredPrice;

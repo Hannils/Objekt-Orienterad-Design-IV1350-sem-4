@@ -18,8 +18,9 @@ import java.time.format.FormatStyle;
 
     TotalRevenueFileOutput() {
         totalRevenue = 0;
+
         try {
-            logFile = new PrintWriter(new FileWriter("total-revenue.txt"), true);
+          logFile = new PrintWriter(new FileWriter("total-revenue.txt"), true);
         } catch (IOException ex) {
             System.out.println("Could not create logger.");
             ex.printStackTrace();
